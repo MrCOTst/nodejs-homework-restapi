@@ -14,7 +14,6 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   const currentContacts = await listContacts();
-  console.table(currentContacts);
   res.json({
     status: "success",
     code: 200,
@@ -24,7 +23,6 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:contactId", async (req, res, next) => {
   const { contactId } = req.params;
-  console.log("id:", contactId);
   const searchContact = await getContactById(contactId);
   if (!searchContact) {
     res.json({
@@ -38,14 +36,9 @@ router.get("/:contactId", async (req, res, next) => {
     data: searchContact,
   });
 });
+
 router.post("/", middleware(schemas.contactPOST), async (req, res) => {
   const { name, email, phone } = req.body;
-  if (!name || !email || !phone) {
-    return res.json({
-      message: "missing required name field",
-      code: 400,
-    });
-  }
   const newContact = await addContact({ name, email, phone });
   res.json({
     status: "success",
@@ -60,7 +53,7 @@ router.delete("/:contactId", async (req, res) => {
   if (!removedContact) {
     return res.json({
       message: "Not found",
-      code: 404,
+      status: 404,
     });
   }
   res.json({ message: "contact deleted", status: "success", code: 200 });
@@ -72,12 +65,6 @@ router.put(
   async (req, res, next) => {
     const { contactId } = req.params;
     const { name, email, phone } = req.body;
-    if (!req.body) {
-      return res.json({
-        message: "missing fields",
-        code: 400,
-      });
-    }
     const contact = await updateContact(contactId, { name, email, phone });
     if (contact) {
       return res.json({
@@ -89,7 +76,7 @@ router.put(
 
     res.json({
       message: "Not found",
-      code: 404,
+      status: 404,
     });
   }
 );

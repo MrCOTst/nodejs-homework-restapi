@@ -1,9 +1,9 @@
 const Joi = require("joi");
 const schemas = {
   contactPOST: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
+    name: Joi.string().required(),
     email: Joi.string().email().required(),
-    phone: Joi.alternatives([Joi.string(), Joi.number()]).required(),
+    phone: Joi.string().max(15).required(),
   }),
 };
 module.exports = schemas;

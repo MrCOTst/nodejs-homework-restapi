@@ -1,4 +1,3 @@
-// const fs = require('fs/promises')
 const { v4 } = require("uuid");
 
 const fs = require("fs").promises;
@@ -14,22 +13,18 @@ const listContacts = async () => {
 
 const getContactById = async (contactId) => {
   const contacts = await listContacts();
-  const searchContact = contacts.find((obj) => obj.id === String(contactId));
-  if (!searchContact) {
-    return console.log(`No contact with id ${contactId}`);
+  const contact = contacts.find((item) => item.id === String(contactId));
+  if (!contact) {
+    return;
   }
-  return searchContact;
+  return contact;
 };
 
 const removeContact = async (contactId) => {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((obj) => obj.id === String(contactId));
-  if (index < 0) {
-    return `No contact with id ${contactId}`;
-  }
-  const [newList] = contacts.splice(index, 1);
+  let contacts = await listContacts();
+  contacts = contacts.filter((item) => item.id !== String(contactId));
   await fs.writeFile(contactsPath, JSON.stringify(contacts));
-  return newList;
+  return contacts;
 };
 
 const addContact = async (body) => {
@@ -41,23 +36,16 @@ const addContact = async (body) => {
 };
 
 const updateContact = async (contactId, { name, email, phone }) => {
-  const contacts = await listContacts();
-  const searchContact = contacts.find((obj) => obj.id === String(contactId));
-  if (!searchContact) {
-    return console.log(`No contact with id ${contactId}`);
-  }
-  const index = contacts.findIndex((obj) => obj.id === String(contactId));
-  if (index < 0) {
-    return `No contact with id ${contactId}`;
-  }
-  name && (searchContact.name = name);
-  email && (searchContact.email = email);
-  phone && (searchContact.phone = phone);
-  contacts.splice(index, 1);
-  contacts.push(searchContact);
+  let contacts = await listContacts();
+  contacts = contacts.map((item) => {
+    if (item.id === String(contactId)) {
+      item = { ...item, ...{ name, email, phone } };
+    }
+    return item;
+  });
+
   await fs.writeFile(contactsPath, JSON.stringify(contacts));
-  console.log("searchContact:", searchContact);
-  return searchContact;
+  return contacts;
 };
 
 module.exports = {
