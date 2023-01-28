@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   const currentContacts = await listContacts();
-  res.json({
+  res.status(200).json({
     status: "success",
     code: 200,
     data: currentContacts,
@@ -25,12 +25,12 @@ router.get("/:contactId", async (req, res, next) => {
   const { contactId } = req.params;
   const searchContact = await getContactById(contactId);
   if (!searchContact) {
-    res.json({
+    res.status(404).json({
       message: "Not found",
       code: 404,
     });
   }
-  res.json({
+  res.status(200).json({
     status: "success",
     code: 200,
     data: searchContact,
@@ -40,7 +40,7 @@ router.get("/:contactId", async (req, res, next) => {
 router.post("/", middleware(schemas.contactPOST), async (req, res) => {
   const { name, email, phone } = req.body;
   const newContact = await addContact({ name, email, phone });
-  res.json({
+  res.status(201).json({
     status: "success",
     code: 201,
     data: newContact,
@@ -51,12 +51,12 @@ router.delete("/:contactId", async (req, res) => {
   const { contactId } = req.params;
   const removedContact = await removeContact(contactId);
   if (!removedContact) {
-    return res.json({
+    return res.status(404).json({
       message: "Not found",
-      status: 404,
+      code: 404,
     });
   }
-  res.json({ message: "contact deleted", status: "success", code: 200 });
+  res.status(200).json({ message: "contact deleted", status: "success", code: 200 });
 });
 
 router.put(
@@ -67,16 +67,16 @@ router.put(
     const { name, email, phone } = req.body;
     const contact = await updateContact(contactId, { name, email, phone });
     if (contact) {
-      return res.json({
+      return res.status(200).json({
         contact,
         status: "success",
         code: 200,
       });
     }
 
-    res.json({
+    res.status(404).json({
       message: "Not found",
-      status: 404,
+      code: 404,
     });
   }
 );

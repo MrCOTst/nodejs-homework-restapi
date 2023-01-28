@@ -10,10 +10,10 @@ const middleware = (schema, property) => {
       const message = details.map((i) => i.message).join(",");
 
       console.log("error", message);
-      res.json({
+      res.status(400).json({
         error: message,
         message: "missing required name field",
-        status: 400,
+        code: 400,
       });
     }
   };

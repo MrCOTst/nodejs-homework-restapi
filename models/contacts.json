@@ -60,22 +60,10 @@
     "phone": "(036) 914-3568"
   },
   {
-    "id": "7bff107a-8e39-4ab7-9d3f-07dd1964609b",
-    "name": "Sofi Lay",
-    "email": "sofi_work@egetlacus.ca",
-    "phone": "(294) 840-6685"
-  },
-  {
     "id": "db4a605c-7fc5-42de-a599-f92462f0e469",
     "name": "Vassyss Kurva",
     "email": "vas.das@info.pl",
     "phone": "(0358) 914-3458"
-  },
-  {
-    "id": "c550df54-4b13-4c38-97e5-d6d7475398dc",
-    "name": "Nixtro Bark",
-    "email": "bark1@info.ua",
-    "phone": "03589653458"
   },
   {
     "id": "a9972332-bd22-46e9-82b3-28c2229ac384",
@@ -88,5 +76,17 @@
     "name": "Kossary Popazy",
     "email": "kosmail@info.com",
     "phone": "(0358) 914-3411"
+  },
+  {
+    "id": "af47a7d9-6d11-47d4-995f-cf179a9a2407",
+    "name": "Inga Today",
+    "email": "ingal@postserv.com",
+    "phone": "(8095) 956-3429"
+  },
+  {
+    "id": "7f63b58f-9044-4fcb-808f-0a3bcad85c1f",
+    "name": "Nixtro Bark",
+    "email": "bark1@info.ua",
+    "phone": "(8067) 965-4589"
   }
 ]
