@@ -33,14 +33,11 @@ app.use((err, _, res, __) => {
 const PORT = process.env.PORT || 3000;
 const uriDb = process.env.DB_HOST;
 
-
-mongoose.set('strictQuery', false)
+mongoose.set("strictQuery", false);
 const connection = mongoose.connect(uriDb, {
   promiseLibrary: global.Promise,
   useNewUrlParser: true,
- 
   useUnifiedTopology: true,
-  
 });
 
 connection
@@ -49,7 +46,7 @@ connection
       console.log(`Database connection successful`);
     });
   })
-  .catch(
-    (err) => console.log(`Server not running. Error message: ${err.message}`),
-    // process.exit(1)
-  );
+  .catch((err) => {
+    console.log(`Server not running. Error message: ${err.message}`);
+    process.exit(1);
+  });
