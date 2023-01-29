@@ -13,8 +13,7 @@ const middleware = (schema, property) => {
       res.status(400).json({
         error: message,
         message: "missing required name field",
-        code: 400,
-      });
+        });
     }
   };
 };
