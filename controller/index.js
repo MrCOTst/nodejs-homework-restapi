@@ -1,4 +1,8 @@
 const service = require("../service");
+const {
+  contactValidation,
+  updateStatusValidation,
+} = require(".//../service/validation/schemas");
 
 const get = async (req, res, next) => {
   try {
@@ -30,6 +34,12 @@ const getById = async (req, res, next) => {
 const create = async (req, res, next) => {
   const { name, email, phone, favorite = false } = req.body;
   try {
+    const { error } = contactValidation.validate(req.body);
+    if (error) {
+      res.status(400).json({
+        message: "missing required name field",
+      });
+    }
     const newContact = await service.createContact({
       name,
       email,
@@ -47,6 +57,12 @@ const update = async (req, res, next) => {
   const { contactId } = req.params;
   const { name, email, phone, favorite } = req.body;
   try {
+    const { error } = contactValidation.validate(req.body);
+    if (error) {
+      res.status(400).json({
+        message: "missing required name field",
+      });
+    }
     const contact = await service.updateContact(contactId, {
       name,
       email,
@@ -71,10 +87,14 @@ const updateStatus = async (req, res, next) => {
   const { favorite } = req.body;
 
   try {
-    if (req.body) {
-      const contact = await service.updateStatusContact(contactId, {
-        favorite,
+    const { error } = updateStatusValidation.validate(req.body);
+    if (error) {
+      res.status(400).json({
+        message: "missing required name field",
       });
+    }
+    if (req.body) {
+      const contact = await service.updateContact(contactId, { favorite });
       if (contact) {
         return res.status(200).json(contact);
       }

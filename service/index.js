@@ -1,4 +1,4 @@
-const Contact = require("./shemas/contact");
+const { Contact } = require("./shemas/contact");
 
 const getAllContacts = async () => {
   return Contact.find();
@@ -16,10 +16,6 @@ const updateContact = (id, fields) => {
   return Contact.findByIdAndUpdate({ _id: id }, fields, { new: true });
 };
 
-const updateStatusContact = (id, { favorite }) => {
-  return Contact.findByIdAndUpdate({ _id: id }, { favorite }, { new: true });
-};
-
 const removeContact = (id) => {
   return Contact.findByIdAndRemove({ _id: id });
 };
@@ -29,6 +25,5 @@ module.exports = {
   getContactById,
   createContact,
   updateContact,
-  updateStatusContact,
   removeContact,
 };
