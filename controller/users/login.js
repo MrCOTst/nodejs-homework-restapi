@@ -7,7 +7,7 @@ require("dotenv").config();
 const { SECRET_KEY } = process.env;
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, subscription } = req.body;
   const user = await User.findOne({ email });
   const passCompare = bcrypt.compareSync(password, user.password);
 
@@ -22,6 +22,7 @@ const login = async (req, res) => {
   res.status(200).json({
     data: {
       token,
+      user:{email, subscription}
     },
   });
 };
