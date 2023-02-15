@@ -4,62 +4,49 @@ const {
   test,
   beforeAll,
   afterAll,
- } = require("@jest/globals");
+} = require("@jest/globals");
 
 const mongoose = require("mongoose");
 const request = require("supertest");
 require("dotenv").config();
-
-mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 
 const app = require("../../app");
 const { DB_HOST, PORT = 3000 } = process.env;
 
-const globalDatabase = mongoose.connect(DB_HOST)
-.then(() => {
-  app.listen(PORT, function () {
-    console.log(`Database connection successful`);
+const globalDatabase = mongoose
+  .connect(DB_HOST)
+  .then(() => {
+    app.listen(PORT, function () {
+      console.log(`Database connection successful`);
+    });
+  })
+  .catch((err) => {
+    console.log(`Server not running. Error message: ${err.message}`);
+    process.exit(1);
   });
-})
-.catch((err) => {
-  console.log(`Server not running. Error message: ${err.message}`);
-  process.exit(1);
-});
 
+const testUser = {
+  email: "testUser@post.com",
+  password: "123456",
+};
 
 describe("test login user", () => {
-  beforeAll(() => {
-    return globalDatabase
-  });
+  beforeAll(async () => await globalDatabase);
 
-  afterAll(() => mongoose.disconnect(DB_HOST));
+  afterAll(async () => await mongoose.connection.close());
 
   test("login return status 200", async () => {
-    const newUser = {
-      email: "testMail@post.com",
-      password: "111111",
-    };
-  
     const response = await request(app)
-    .post("api/users/login")
-    .send(newUser)
-    .set('Accept', 'application/json') ;
-    expect(response.status).toBe(200);
-    expect(isObject(response.body)).toBe(true);
-    const {body} = response;
-    expect(body.token).toBeTruthy();
-    const {user} = response.body;
-    expect(typeof user.email).toBe('string');
-    expect(typeof user.subscription).toBe('string');
-    request.end()
-    
+      .post("/api/users/login")
+      .send(testUser)
+      .set("Accept", "application/json");
+
+    const { token, user } = response.body.data;
+    expect(response.status).toEqual(200);
+    expect(token).toBeTruthy();
+    expect(user).toBeDefined();
+    expect(typeof user.email).toBe("string");
+    expect(typeof user.subscription).toBe("string");
   });
- 
 });
-
-
-function isObject(obj) {
-  const type = typeof obj;
-  return type === 'function' || (type === 'object' && !!obj);
-}
-

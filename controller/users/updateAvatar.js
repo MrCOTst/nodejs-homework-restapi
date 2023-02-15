@@ -8,7 +8,8 @@ const avatarDir = path.join(__dirname, "../../", "public", "avatars");
 const updateAvatar = async (req, res) => {
   const { path: tempUpload, originalname } = req.file;
   const { _id: id } = req.user;
-  const imageName = `${id}_${originalname}`;
+  const [extention] = originalname.split(".").reverse();
+  const imageName = `${id}.${extention}`;
   const resultUpload = path.join(avatarDir, imageName);
 
   try {
@@ -17,8 +18,8 @@ const updateAvatar = async (req, res) => {
 
     await fs.rename(tempUpload, resultUpload);
 
-    const avatarUrl = path.join("public", "avatars", imageName);
-    await User.findByIdAndUpdate(req.user._id, { avatarUrl });
+    const avatarUrl = path.join(avatarDir, imageName);
+    await User.findByIdAndUpdate(id, { avatarUrl });
     res.status(200).json({ avatarUrl });
   } catch (error) {
     await fs.unlink(tempUpload);
