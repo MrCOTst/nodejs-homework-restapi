@@ -1,5 +1,5 @@
 const { User } = require("../../models");
-const { Unauthorized } = require("http-errors");
+const { Unauthorized, BadRequest } = require("http-errors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -16,6 +16,11 @@ const login = async (req, res) => {
   if (!user || !passCompare) {
     throw new Unauthorized("Email or password is wrong");
   }
+
+  if (!user.verify) {
+    throw new BadRequest("Email not verify");
+  }
+
   const payload = {
     id: user._id,
   };

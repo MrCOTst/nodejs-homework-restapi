@@ -3,7 +3,7 @@ const {
   updateStatusValidation,
 } = require("./joiSchemasContact");
 
-const { joiRegisterSchema, joiLoginSchema, joiSubscriptionSchema } = require("..//../models/user");
+const { joiRegisterSchema, joiLoginSchema, joiSubscriptionSchema, joiEmailSchema } = require("..//../models/user");
 
 const middleware = (schemas, property) => {
   return (req, res, next) => {
@@ -29,6 +29,7 @@ const statusContactValidation = middleware(updateStatusValidation);
 const userRegisterValidation = middleware(joiRegisterSchema);
 const userLoginValidation = middleware(joiLoginSchema);
 const userSubscriptionValidation = middleware(joiSubscriptionSchema);
+const verifyEmailValidation = middleware(joiEmailSchema);
 
 module.exports = {
   createContactValidation,
@@ -36,4 +37,5 @@ module.exports = {
   userRegisterValidation,
   userLoginValidation,
   userSubscriptionValidation,
+  verifyEmailValidation,
 };
