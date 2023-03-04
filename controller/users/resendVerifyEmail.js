@@ -1,6 +1,7 @@
 const { User } = require("../../models");
 const { BadRequest } = require("http-errors");
 const sendEmail = require("../../service/sendEmail");
+const { PORT = 3000} = process.env;
 
 const resendVerifyEmail = async (req, res) => {
   const { email } = req.body;
@@ -14,7 +15,7 @@ const resendVerifyEmail = async (req, res) => {
   const mail = {
     to: email,
     subject: "Confirmation of registration on the website",
-    html: `<a href="http://localhost:3000/api/users/verify/${user.verificationToken}"target="_blank">Follow the link to confirm your email</a>`,
+    html: `<a href="http://localhost:${PORT}/api/users/verify/${user.verificationToken}"target="_blank">Follow the link to confirm your email</a>`,
   };
   await sendEmail(mail);
   res.status(200).json({
