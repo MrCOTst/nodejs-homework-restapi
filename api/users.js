@@ -7,10 +7,14 @@ const upload = require("../service/middlewares/upload");
 const {
   userRegisterValidation,
   userLoginValidation,
-  userSubscriptionValidation,
+  userSubscriptionValidation, verifyEmailValidation
 } = require("../service/middlewares/validation");
 
 router.post("/register", userRegisterValidation, ctrlWrapper(ctrl.register));
+
+router.get("/verify/:verificationToken", ctrlWrapper(ctrl.verifyEmail));
+
+router.post("/verify", verifyEmailValidation, ctrlWrapper(ctrl.resendVerifyEmail));
 
 router.post("/login", userLoginValidation, ctrlWrapper(ctrl.login));
 

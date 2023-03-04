@@ -2,6 +2,9 @@ const { User } = require("../../models");
 const { Conflict } = require("http-errors");
 const bcrypt = require('bcryptjs');
 const gravatar = require('gravatar');
+const sendEmail = require('../../service/sendEmail');
+const { v4 } = require("uuid");
+const { PORT = 3000} = process.env;
 
 const register = async (req, res) => {
   const { email, password, subscription } = req.body;
@@ -11,7 +14,15 @@ const register = async (req, res) => {
   }
   const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
   const avatarUrl = gravatar.url(email);
-  user = await User.create({ email, password: hashPassword, subscription, avatarUrl });
+  const verificationToken = v4();
+
+  user = await User.create({ email, password: hashPassword, subscription, avatarUrl, verificationToken});
+const mail = {
+  to: email,
+  subject: 'Confirmation of registration on the website',
+  html: `<a href="http://localhost:${PORT}/users/verify/${verificationToken}" target="_blank">Follow the link to confirm your email</a>`
+};
+await sendEmail(mail);
   res.status(201).json({
     data: {
         user: {
